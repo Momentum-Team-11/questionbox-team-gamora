@@ -133,6 +133,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "api.User"
+CORS_ORIGIN_ALLOW_ALL = True
 
 django_on_heroku.settings(locals())
 del DATABASES['default']['OPTIONS']['sslmode']
@@ -142,5 +143,3 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ]
 }
-
-CORS_ORIGIN_ALLOW_ALL = True
