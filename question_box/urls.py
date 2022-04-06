@@ -16,9 +16,31 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from api import views as api_views
+from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework.routers import DefaultRouter
+
+
+
+router = DefaultRouter()
+router.register("question", api_views.QuestionViewSet)
+router.register("answer", api_views.AnswerViewSet)
+router.register("user", api_views.UserViewSet)
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("api/", include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
-    # path('api/questions_list', ),
+    path("api/auth/", include('djoser.urls')),
+    path("api/auth/", include('djoser.urls.authtoken')),
+    # path('api/question_list', api_views.QuestionViewSet, name='api_question_list'),
+    path('api/<int:pk>/question_answer_detail', api_views.QuestionAnswerDetail.as_view(), name='api_question_answer_detail'),
+    # path('api/answer_list', api_views.AnswerViewSet, name='api_answer_list'),
+    path('api/<int:pk>/answer_detail', api_views.AnswerDetail.as_view(), name='api_answer_detail'),
+    # path('users/', api_views.UserViewSet, name='api_user_list'),
+    # path('api_root', api_views.api_root),
 ]
+
+
+

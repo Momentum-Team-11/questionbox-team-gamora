@@ -14,7 +14,7 @@ class Question(models.Model):
     question = models.TextField()
     user = models.ForeignKey(User, related_name="questions", on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=datetime.now)
-    favorited = models.ManyToManyField(User, related_name="favorite_question")
+    favorited = models.ManyToManyField(User, related_name="favorite_question", blank=True)
     
     def __str__(self):
         return self.question
@@ -25,7 +25,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     answer = models.TextField()
-    question = models.ForeignKey(Question, related_name="questions", on_delete=models.CASCADE, null=True, blank=True)
+    questions = models.ForeignKey(Question, related_name="questions", on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(User, related_name="answered", on_delete=models.CASCADE, null=True, blank=True)
     answered_at = models.DateTimeField(auto_now_add=datetime.now)
     favorited = models.ManyToManyField(User, related_name="favorite_answer")
