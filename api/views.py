@@ -31,6 +31,7 @@ class QuestionViewSet(ModelViewSet):
 
 
 class UserQuestionViewSet(generics.ListCreateAPIView): 
+    queryset = Question.objects.all().order_by("favorited")
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
@@ -41,7 +42,8 @@ class UserQuestionViewSet(generics.ListCreateAPIView):
         return Question.objects.filter(filters)
 
 
-class UserAnswerViewSet(generics.ListCreateAPIView): 
+class UserAnswerViewSet(generics.ListCreateAPIView):
+    queryset = Answer.objects.all().order_by("-id")
     serializer_class = AnswerSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
