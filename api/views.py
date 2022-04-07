@@ -6,9 +6,11 @@ from rest_framework.decorators import api_view
 from .serializers import QuestionSerializer, UserSerializer, AnswerSerializer, QuestionAnswerSerializer
 from .models import Question, Answer, User
 from rest_framework import generics
+from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 from .custom_permissions import (
-    IsAdminOrReadOnly,
+    IsAdminOrReadOnly,IsUserOrReadOnly
 )
 
 @api_view(['GET'])
@@ -25,6 +27,24 @@ class QuestionViewSet(ModelViewSet):
     queryset = Question.objects.all().order_by("-created_at")
     serializer_class = QuestionSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+
+class UserQuestionViewSet(generics.ListCreateAPIView): 
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Question.objects.filter(filters)
+
+
+class UserAnswerViewSet(generics.ListCreateAPIView): 
+    serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Answer.objects.filter(filters)
 
 
 class QuestionAnswerDetail(generics.RetrieveUpdateDestroyAPIView):
