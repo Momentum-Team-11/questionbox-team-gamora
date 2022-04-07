@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from .serializers import QuestionSerializer, UserSerializer, AnswerSerializer, QuestionAnswerSerializer
 from .models import Question, Answer, User
 from rest_framework import generics
+from rest_framework import filters
 from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
@@ -32,6 +33,8 @@ class QuestionViewSet(ModelViewSet):
 class UserQuestionViewSet(generics.ListCreateAPIView): 
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['question']
     
     def get_queryset(self):
         filters = Q(user_id=self.request.user)
@@ -41,6 +44,8 @@ class UserQuestionViewSet(generics.ListCreateAPIView):
 class UserAnswerViewSet(generics.ListCreateAPIView): 
     serializer_class = AnswerSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['answer']
     
     def get_queryset(self):
         filters = Q(user_id=self.request.user)
@@ -49,7 +54,6 @@ class UserAnswerViewSet(generics.ListCreateAPIView):
 
 class QuestionAnswerDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Question.objects.all().order_by("id")
-	queryset2 = Answer.objects.all().order_by("favorited")
 	serializer_class = QuestionAnswerSerializer
 
 class UserViewSet(ModelViewSet):
@@ -59,7 +63,7 @@ class UserViewSet(ModelViewSet):
 
 
 class AnswerViewSet(ModelViewSet): 
-	queryset = Answer.objects.all()
+	queryset = Answer.objects.all().order_by("favorited")
 	serializer_class = AnswerSerializer
 
 

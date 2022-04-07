@@ -24,6 +24,9 @@ http://127.0.0.1:8000/api/user
 <!-- POST api auth token login -->
 http://127.0.0.1:8000/api/auth/token/login
 
+<!-- POST api auth token logout -->
+http://127.0.0.1:8000/api/auth/token/logout
+
 
 <!-- GET one question and one answer depending on what is put in for the <int:pk> value -->
 http://127.0.0.1:8000/api/<int:pk>/question_answer_detail
