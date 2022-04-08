@@ -35,9 +35,9 @@ urlpatterns = [
     path("api/auth/", include('djoser.urls')),
     path("api/auth/", include('djoser.urls.authtoken')),
     path('api/user_question_list', api_views.UserQuestionViewSet.as_view(), name='api_question_list'),
-    path('api/<int:pk>/question_answer_detail', api_views.QuestionAnswerDetail.as_view(), name='api_question_answer_detail'),
+    path('api/question/<int:pk>/answers', api_views.QuestionAnswerDetail.as_view(), name='api_question_answer_detail'),
     path('api/user_answer_list', api_views.UserAnswerViewSet.as_view(), name='api_answer_list'),
-    path('api/<int:pk>/answer_detail', api_views.AnswerDetail.as_view(), name='api_answer_detail'),
+    # path('api/<int:pk>/answer_detail', api_views.AnswerDetail.as_view(), name='api_answer_detail'),
     # path('users/', api_views.UserViewSet, name='api_user_list'),
     # path('api_root', api_views.api_root),
 ]

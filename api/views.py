@@ -31,7 +31,6 @@ class QuestionViewSet(ModelViewSet):
 
 
 class UserQuestionViewSet(generics.ListCreateAPIView): 
-    queryset = Question.objects.all().order_by("favorited")
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
@@ -39,11 +38,13 @@ class UserQuestionViewSet(generics.ListCreateAPIView):
     
     def get_queryset(self):
         filters = Q(user_id=self.request.user)
-        return Question.objects.filter(filters)
+        return Question.objects.exclude(favorited=None).filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class UserAnswerViewSet(generics.ListCreateAPIView):
-    queryset = Answer.objects.all().order_by("-id")
     serializer_class = AnswerSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
@@ -51,7 +52,10 @@ class UserAnswerViewSet(generics.ListCreateAPIView):
     
     def get_queryset(self):
         filters = Q(user_id=self.request.user)
-        return Answer.objects.filter(filters)
+        return Answer.objects.exclude(favorited=None).filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class QuestionAnswerDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -64,9 +68,9 @@ class UserViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class AnswerViewSet(ModelViewSet): 
-	queryset = Answer.objects.all().order_by("favorited")
-	serializer_class = AnswerSerializer
+class AnswerViewSet(ModelViewSet):
+    queryset = Answer.objects.all().order_by("favorited")
+    serializer_class = AnswerSerializer
 
 
 class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
