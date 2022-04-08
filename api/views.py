@@ -30,7 +30,7 @@ class QuestionViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class UserQuestionViewSet(generics.ListCreateAPIView): 
+class UserQuestionFavoritedViewSet(generics.ListCreateAPIView): 
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
@@ -44,7 +44,21 @@ class UserQuestionViewSet(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class UserAnswerViewSet(generics.ListCreateAPIView):
+class UserQuestionViewSet(generics.ListCreateAPIView): 
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['question']
+    
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Question.objects.filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class UserFavoritedAnswerViewSet(generics.ListCreateAPIView):
     serializer_class = AnswerSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
@@ -58,9 +72,24 @@ class UserAnswerViewSet(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
+class UserAnswerViewSet(generics.ListCreateAPIView):
+    serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['answer']
+    
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Answer.objects.filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
 class QuestionAnswerDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Question.objects.all().order_by("id")
 	serializer_class = QuestionAnswerSerializer
+
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all().order_by("id")
@@ -76,3 +105,15 @@ class AnswerViewSet(ModelViewSet):
 class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Answer.objects.all()
 	serializer_class = AnswerSerializer
+
+
+class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Question.objects.filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

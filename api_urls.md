@@ -1,81 +1,3 @@
-<!-- GET all user questions -->
-https://dj-questionbox.herokuapp.com/api/user_question_list
-Token: 77b1dff1442d4c67f250dc34dad55bd500b3f04b 
-# this token is for user 1 admin btw
-# "username": "admin",
-# "password": "admin"
-
-<!-- GET all user answer -->
-https://dj-questionbox.herokuapp.com/api/user_answer_list
-
-
-<!-- GET all questions -->
-https://dj-questionbox.herokuapp.com/api/answer
-
-
-<!-- GET all answer -->
-https://dj-questionbox.herokuapp.com/api/question
-
-
-<!-- GET all users -->
-https://dj-questionbox.herokuapp.com/api/user
-
-
-<!-- POST api auth token login -->
-https://dj-questionbox.herokuapp.com/api/auth/token/login
-
-<!-- POST api auth token logout -->
-https://dj-questionbox.herokuapp.com/api/auth/token/logout
-
-
-<!-- GET one question and one answer depending on what is put in for the <int:pk> value -->
-https://dj-questionbox.herokuapp.com/api/<int:pk>/question_answer_detail
-
-
-<!-- GET one answer depending on what is put in for the <int:pk> value -->
-https://dj-questionbox.herokuapp.com/api/<int:pk>/answer_detail
-
-
-Token: 626481b0af41ae56e4d9aac90c04bf975fe7adcc
-# this token is for user 2 paul btw
-# "username": "paul",
-# "password": "paulcool"
-
-# Backend Questionbox Documentation
-
-## Models
-
-- **Question**
-    - Fields
-      - : TextField
-      - question: TextField
-      - created_at: DateTimeField
-      - user: FK
-      - favorited: M2M
-- **Answer**
-    - Fields
-      - answer: CharField
-      - questions: FK
-      - answer_at: DateTimeField
-      - user: FK
-      - favorited: M2M
-<h1> Register a new user
-
-### Endpoints
-
-| Method | URL           | Description                                    | Notes |
-|--------|---------------|------------------------------------------------|-|
-| POST   | /question/    | create a new question   ||
-| GET    | /question/:Q_id/   | returns a question with all the answers answers                   |slug/pk later?|
-| PATCH  | /question/:Q_id/   | edit an existing question   ||
-| DELETE | /question/:Q_id/   | edit an existing question   ||
-| GET    | /questions/   | get a list of all questions                    ||
-| GET    | /questions/:user_id/ | get a list of all questions the user has posted |slug/pk later?|
-| GET    | /answers/ | return all the answers a user has given as well as the question they were to  ||
-| GET    | /favorites/ | retrieve all favorites            ||
-| GET    | /favorite/questions | retrieve all favorited questions            ||
-| GET    | /favorite/answers | retrieve all favorited answers            ||
-
 
 ## Register a new user
 
@@ -105,7 +27,7 @@ POST api/auth/users/
 
 ```
 
-## Log In
+## Login
 
 ### request
 
@@ -126,7 +48,14 @@ POST api/auth/token/login
 }
 ```
 
+## Logout
 
+### request
+
+```
+POST api/auth/token/logout
+
+```
 
 
 ## List all questions 
@@ -165,6 +94,7 @@ GET api/question
 ```
 
 ## List all answers 
+
 
 Requires authentication.
 
@@ -227,14 +157,66 @@ GET api/answer
 ]
 ```
 
-## List all user answers 
+## List all user questions  
 
 Requires authentication.
 
 ### request
 
 ```txt
-GET api/user_answer_list
+GET api/user_q_list
+```
+
+### response
+
+```json
+[
+	{
+		"id": 1,
+		"user": "admin",
+		"question": "What is your dogs name?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-05T18:20:14.912272Z"
+	},
+	{
+		"id": 2,
+		"user": "admin",
+		"question": "Who is Gamora?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-05T18:20:58.309005Z"
+	},
+	{
+		"id": 6,
+		"user": "admin",
+		"question": "What is your cat name?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-08T14:11:06.293625Z"
+	},
+	{
+		"id": 7,
+		"user": "admin",
+		"question": "What is your bird name?",
+		"favorited": [],
+		"created_at": "2022-04-08T19:17:00.463150Z"
+	}
+]
+```
+
+## List all user answers  
+
+
+Requires authentication.
+
+### request
+
+```txt
+GET api/user_a_list
 ```
 
 ### response
@@ -288,4 +270,380 @@ GET api/user_answer_list
 		"answered_at": "2022-04-07T20:11:57.694383Z"
 	}
 ]
+```
+
+## List all user favorited questions  
+
+Requires authentication.
+
+### request
+
+```txt
+GET api/user_favorited_q_list
+```
+
+### response
+
+```json
+[
+	{
+		"id": 1,
+		"user": "admin",
+		"question": "What is your dogs name?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-05T18:20:14.912272Z"
+	},
+	{
+		"id": 2,
+		"user": "admin",
+		"question": "Who is Gamora?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-05T18:20:58.309005Z"
+	},
+	{
+		"id": 6,
+		"user": "admin",
+		"question": "What is your cat name?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-08T14:11:06.293625Z"
+	}
+]
+```
+
+## List all user favorited answers  
+
+Requires authentication.
+
+### request
+
+```txt
+GET api/user_favorited_a_list
+```
+
+### response
+
+```json
+[
+	{
+		"id": 1,
+		"user": "admin",
+		"answer": "My dogs name is Crowley.",
+		"questions": 1,
+		"favorited": [
+			1
+		],
+		"answered_at": "2022-04-05T18:20:41.199009Z"
+	},
+	{
+		"id": 2,
+		"user": "admin",
+		"answer": "She is a character in the Marvel universe.",
+		"questions": 2,
+		"favorited": [
+			1
+		],
+		"answered_at": "2022-04-05T18:21:42.841606Z"
+	},
+	{
+		"id": 6,
+		"user": "admin",
+		"answer": "another name would be scuttle butt",
+		"questions": 1,
+		"favorited": [
+			1
+		],
+		"answered_at": "2022-04-07T15:24:31.510868Z"
+	}
+]
+```
+
+## List one question and all answers to it
+
+Requires authentication.
+
+### request
+
+Requires authentication.
+
+```
+GET api/question/<int:pk>/answers
+
+```
+
+### respons
+```
+
+{
+	"id": 3,
+	"user": "paul",
+	"question": "whats your favorite color?",
+	"answers": [
+		{
+			"id": 3,
+			"user": "paul",
+			"answer": "Green",
+			"questions": 3,
+			"favorited": [],
+			"answered_at": "2022-04-06T22:12:01.827699Z"
+		},
+		{
+			"id": 7,
+			"user": "paul",
+			"answer": "green/blue",
+			"questions": 3,
+			"favorited": [
+				2
+			],
+			"answered_at": "2022-04-07T16:44:14.945693Z"
+		}
+	]
+}
+```
+
+## Create a new question
+
+Requires authentication.
+
+### request
+
+`question` and `favorited` are required fields.
+
+```
+POST api/user_q_list
+
+{
+   "question": "What is your bird name?",
+   "favorited": []
+}
+```
+
+### response
+
+```
+201 Created
+
+{
+	"id": 7,
+	"user": "admin",
+	"question": "What is your bird name?",
+	"favorited": [],
+	"created_at": "2022-04-08T19:17:00.463150Z"
+}
+
+```
+
+## Create a user favorited question  
+
+Requires authentication.
+
+### request
+
+`question` and `favorited` are required fields.
+
+```
+POST api/user_favorited_q_list
+
+{
+   "question": "What is your snakes name?",
+   "favorited": [1]
+}
+```
+
+### response
+
+```
+201 Created
+
+{
+		"id": 8,
+		"user": "admin",
+		"question": "What is your snakes name?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-08T19:34:01.290543Z"
+	}
+
+```
+
+## Create a new user answer
+
+Requires authentication.
+
+### request
+
+`answer` and `questions` `favorited`are required fields.
+
+```
+POST api/user_a_list
+
+{
+   "answer": "Sunny",
+   "questoins": 1
+   "favorited": []
+}
+```
+
+### response
+
+```
+201 Created
+
+{
+	"id": 9,
+	"user": "admin",
+	"answer": "Sunny",
+	"questions": 1,
+	"favorited": [],
+	"answered_at": "2022-04-08T20:24:32.332402Z"
+}
+
+```
+
+## Create a user favorited answer 
+
+Requires authentication.
+
+### request
+
+`answer` and `questions` `favorited`are required fields.
+
+```
+POST api/user_a_list
+
+{
+   "answer": "Sunny",
+   "questoins": 1
+   "favorited": [1]
+}
+```
+
+### response
+
+```
+201 Created
+
+{
+	"id": 10,
+	"user": "admin",
+	"answer": "jingles",
+	"questions": 1,
+	"favorited": [
+		1
+	],
+	"answered_at": "2022-04-08T20:31:56.477966Z"
+}
+
+```
+
+## Delete one question and all answers to it 
+
+Requires authentication.
+
+### request
+
+`id` are required fields.
+
+```
+DELETE api/question/<int:pk>/answers
+{
+   "id": "3",
+}
+```
+
+### respons
+```
+
+{
+	"detail": "Not found."
+}
+```
+
+## Delete one answer 
+
+Requires authentication.
+
+### request
+
+`id` are required fields.
+
+```
+DELETE api/<int:pk>/answer_detail
+
+{
+   "id": "9",
+}
+```
+
+### respons
+```
+
+{
+	"detail": "Not found."
+}
+```
+
+## Update a question
+
+Requires authentication. 
+
+### request
+
+```
+
+PATCH api/<int:pk>/question_detail
+
+{
+  "favorited": []
+}
+```
+
+### response
+
+```
+200 OK
+
+{
+	"id": 1,
+	"user": "admin",
+	"question": "What is your dogs name?",
+	"favorited": [],
+	"created_at": "2022-04-05T18:20:14.912272Z"
+}
+```
+
+## Update a answer
+
+Requires authentication. 
+
+### request
+
+```
+
+PATCH api/<int:pk>/answer_detail
+
+{
+  "favorited": []
+}
+```
+
+### response
+
+```
+200 OK
+
+{
+	"id": 1,
+	"user": "admin",
+	"answer": "My dogs name is Crowley.",
+	"questions": 1,
+	"favorited": [],
+	"answered_at": "2022-04-05T18:20:41.199009Z"
+}
 ```
