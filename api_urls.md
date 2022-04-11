@@ -157,7 +157,8 @@ GET api/answer
 ]
 ```
 
-## List all user questions  
+## List all user questions 
+
 
 Requires authentication.
 
@@ -204,6 +205,50 @@ GET api/user_q_list
 		"question": "What is your bird name?",
 		"favorited": [],
 		"created_at": "2022-04-08T19:17:00.463150Z"
+	}
+]
+```
+
+## List all user favorited questions  
+
+Requires authentication.
+
+### request
+
+```txt
+GET api/user_favorited_q_list
+```
+
+### response
+
+```json
+[
+	{
+		"id": 1,
+		"user": "admin",
+		"question": "What is your dogs name?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-05T18:20:14.912272Z"
+	},
+	{
+		"id": 2,
+		"user": "admin",
+		"question": "Who is Gamora?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-05T18:20:58.309005Z"
+	},
+	{
+		"id": 6,
+		"user": "admin",
+		"question": "What is your cat name?",
+		"favorited": [
+			1
+		],
+		"created_at": "2022-04-08T14:11:06.293625Z"
 	}
 ]
 ```
@@ -272,51 +317,8 @@ GET api/user_a_list
 ]
 ```
 
-## List all user favorited questions  
 
-Requires authentication.
-
-### request
-
-```txt
-GET api/user_favorited_q_list
-```
-
-### response
-
-```json
-[
-	{
-		"id": 1,
-		"user": "admin",
-		"question": "What is your dogs name?",
-		"favorited": [
-			1
-		],
-		"created_at": "2022-04-05T18:20:14.912272Z"
-	},
-	{
-		"id": 2,
-		"user": "admin",
-		"question": "Who is Gamora?",
-		"favorited": [
-			1
-		],
-		"created_at": "2022-04-05T18:20:58.309005Z"
-	},
-	{
-		"id": 6,
-		"user": "admin",
-		"question": "What is your cat name?",
-		"favorited": [
-			1
-		],
-		"created_at": "2022-04-08T14:11:06.293625Z"
-	}
-]
-```
-
-## List all user accepted answers  
+## List all user accepted answers 
 
 Requires authentication.
 
@@ -490,13 +492,13 @@ POST api/user_favorited_q_list
 
 ```
 
-## Create a new user answer
+## Create a user answer
 
 Requires authentication.
 
 ### request
 
-`answer` and `questions` `favorited`are required fields.
+`answer` and `questions` are required fields.
 
 ```
 POST api/user_a_list
@@ -524,20 +526,57 @@ POST api/user_a_list
 
 ```
 
-## Create a user favorited answer 
+## Create an accepted answer
 
 Requires authentication.
 
 ### request
 
-`answer` and `questions` `favorited`are required fields.
+`answer` and `questions` `accepted` `favorited`are required fields.
 
 ```
-POST api/user_a_list
+POST api/user_accepted_a_list
 
 {
    "answer": "Sunny",
-   "questoins": 1
+   "questoins": 1, 
+   "accepted": 1, 
+   "favorited": []
+}
+```
+
+### response
+
+```
+201 Created
+
+{
+	"id": 10,
+	"user": "admin",
+	"answer": "jingles",
+	"questions": 1,
+    "accepted": 1,
+	"favorited": [],
+	"answered_at": "2022-04-08T20:31:56.477966Z"
+}
+
+```
+
+## Create an accepted favorited answer
+
+Requires authentication.
+
+### request
+
+`answer` and `questions` `accepted` `favorited`are required fields.
+
+```
+POST api/user_accepted_favorited_a_list
+
+{
+   "answer": "Sunny",
+   "questoins": 1, 
+   "accepted": 1, 
    "favorited": [1]
 }
 ```
@@ -552,9 +591,8 @@ POST api/user_a_list
 	"user": "admin",
 	"answer": "jingles",
 	"questions": 1,
-	"favorited": [
-		1
-	],
+    "accepted": 1,
+	"favorited": [1],
 	"answered_at": "2022-04-08T20:31:56.477966Z"
 }
 
@@ -635,6 +673,10 @@ PATCH api/<int:pk>/question_detail
 	"created_at": "2022-04-05T18:20:14.912272Z"
 }
 ```
+### note
+```
+When updating you only want to give them the option of updating the favorited field.
+```
 
 ## Update a answer
 
@@ -661,7 +703,12 @@ PATCH api/<int:pk>/answer_detail
 	"user": "admin",
 	"answer": "My dogs name is Crowley.",
 	"questions": 1,
+	"accepted": null
 	"favorited": [],
 	"answered_at": "2022-04-05T18:20:41.199009Z"
 }
+```
+### note
+```
+When updating you only want to give them the option of updating the accepted or favorited fields or both. 
 ```
