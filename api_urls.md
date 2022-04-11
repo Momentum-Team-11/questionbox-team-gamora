@@ -316,14 +316,14 @@ GET api/user_favorited_q_list
 ]
 ```
 
-## List all user favorited answers  
+## List all user accepted answers  
 
 Requires authentication.
 
 ### request
 
 ```txt
-GET api/user_favorited_a_list
+GET api/user_accepted_a_list
 ```
 
 ### response
@@ -331,34 +331,52 @@ GET api/user_favorited_a_list
 ```json
 [
 	{
-		"id": 1,
+		"id": 11,
 		"user": "admin",
-		"answer": "My dogs name is Crowley.",
+		"answer": "He also goes by pups McGee.",
 		"questions": 1,
-		"favorited": [
-			1
-		],
-		"answered_at": "2022-04-05T18:20:41.199009Z"
+		"accepted": 1,
+		"favorited": [],
+		"answered_at": "2022-04-11T12:51:47.917048Z"
 	},
 	{
-		"id": 2,
+		"id": 12,
 		"user": "admin",
-		"answer": "She is a character in the Marvel universe.",
-		"questions": 2,
-		"favorited": [
-			1
-		],
-		"answered_at": "2022-04-05T18:21:42.841606Z"
-	},
-	{
-		"id": 6,
-		"user": "admin",
-		"answer": "another name would be scuttle butt",
+		"answer": "He also goes by pupperino.",
 		"questions": 1,
+		"accepted": 1,
 		"favorited": [
 			1
 		],
-		"answered_at": "2022-04-07T15:24:31.510868Z"
+		"answered_at": "2022-04-11T12:52:24.847807Z"
+	}
+]
+```
+
+## List all user accepted favorited answers  
+
+Requires authentication.
+
+### request
+
+```txt
+GET api/user_a_favorited_a_list
+```
+
+### response
+
+```json
+[
+	{
+		"id": 12,
+		"user": "admin",
+		"answer": "He also goes by pupperino.",
+		"questions": 1,
+		"accepted": 1,
+		"favorited": [
+			1
+		],
+		"answered_at": "2022-04-11T12:52:24.847807Z"
 	}
 ]
 ```

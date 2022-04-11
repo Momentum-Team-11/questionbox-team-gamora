@@ -58,20 +58,6 @@ class UserQuestionViewSet(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class UserFavoritedAnswerViewSet(generics.ListCreateAPIView):
-    serializer_class = AnswerSerializer
-    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['answer']
-    
-    def get_queryset(self):
-        filters = Q(user_id=self.request.user)
-        return Answer.objects.exclude(favorited=None).filter(filters)
-    
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
 class UserAnswerViewSet(generics.ListCreateAPIView):
     serializer_class = AnswerSerializer
     permission_classes = [IsAuthenticated, IsUserOrReadOnly]
@@ -81,6 +67,34 @@ class UserAnswerViewSet(generics.ListCreateAPIView):
     def get_queryset(self):
         filters = Q(user_id=self.request.user)
         return Answer.objects.filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class UserAcceptedAnswerViewSet(generics.ListCreateAPIView):
+    serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['answer']
+    
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Answer.objects.exclude(accepted=None).filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class UserAcceptedFavoritedAnswerViewSet(generics.ListCreateAPIView):
+    serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['answer']
+    
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Answer.objects.exclude(favorited=None).exclude(accepted=None).filter(filters)
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

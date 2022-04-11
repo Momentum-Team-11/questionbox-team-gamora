@@ -27,6 +27,7 @@ class Answer(models.Model):
     answer = models.TextField()
     questions = models.ForeignKey(Question, related_name="questions", on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(User, related_name="answered", on_delete=models.CASCADE, null=True, blank=True)
+    accepted = models.ForeignKey(Question, related_name="accepted", on_delete=models.CASCADE, null=True, blank=True)
     answered_at = models.DateTimeField(auto_now_add=datetime.now)
     favorited = models.ManyToManyField(User, related_name="favorite_answer", blank=True)
 

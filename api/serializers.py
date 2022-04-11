@@ -20,7 +20,7 @@ class AnswerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Answer
-        fields = ('id', 'user', 'answer', 'questions', 'favorited', 'answered_at',)
+        fields = ('id', 'user', 'answer', 'questions', 'accepted', 'favorited', 'answered_at',)
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True, required=False, source='questions')
