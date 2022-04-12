@@ -432,7 +432,7 @@ Requires authentication.
 
 ### request
 
-`question` and `favorited` are required fields.
+`question` are required fields.
 
 ```
 POST api/user_q_list
@@ -505,7 +505,7 @@ POST api/user_a_list
 
 {
    "answer": "Sunny",
-   "questoins": 1
+   "questions": 1
    "favorited": []
 }
 ```

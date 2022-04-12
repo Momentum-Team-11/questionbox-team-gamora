@@ -23,7 +23,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register("question", api_views.QuestionViewSet)
-router.register("answer", api_views.AnswerViewSet)
+# router.register("answer", api_views.AnswerViewSet)
 router.register("user", api_views.UserViewSet)
 
 
@@ -40,6 +40,8 @@ urlpatterns = [
     path('api/user_a_list', api_views.UserAnswerViewSet.as_view(), name='api_answer_list'),
     path('api/user_accepted_a_list', api_views.UserAcceptedAnswerViewSet.as_view(), name='api_accepted_a_list'),
     path('api/user_accepted_favorited_a_list', api_views.UserAcceptedFavoritedAnswerViewSet.as_view(), name='api_accepted_favorited_a_list'),
+    path('api/answer', api_views.UserAnswerListSet.as_view(), name='api_answer'),
+    path('api/answerviewset', api_views.AnswerViewSet.as_view(), name='api_answerviewset'),
     path('api/<int:pk>/answer_detail', api_views.AnswerDetail.as_view(), name='api_answer_detail'),
     path('api/<int:pk>/question_detail', api_views.QuestionDetail.as_view(), name='api_question_detail'),
     # path('users/', api_views.UserViewSet, name='api_user_list'),

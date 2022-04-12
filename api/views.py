@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.decorators import api_view
 from .serializers import QuestionSerializer, UserSerializer, AnswerSerializer, QuestionAnswerSerializer
 from .models import Question, Answer, User
@@ -27,12 +27,12 @@ def api_root(request, format=None):
 class QuestionViewSet(ModelViewSet): 
     queryset = Question.objects.all().order_by("-created_at")
     serializer_class = QuestionSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsUserOrReadOnly]
 
 
 class UserQuestionFavoritedViewSet(generics.ListCreateAPIView): 
     serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    permission_classes = [IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['question']
     
@@ -46,7 +46,7 @@ class UserQuestionFavoritedViewSet(generics.ListCreateAPIView):
 
 class UserQuestionViewSet(generics.ListCreateAPIView): 
     serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    permission_classes = [IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['question']
     
@@ -60,7 +60,21 @@ class UserQuestionViewSet(generics.ListCreateAPIView):
 
 class UserAnswerViewSet(generics.ListCreateAPIView):
     serializer_class = AnswerSerializer
-    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    permission_classes = [IsUserOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['answer']
+    
+    def get_queryset(self):
+        filters = Q(user_id=self.request.user)
+        return Answer.objects.filter(filters)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class UserAnswerListSet(generics.ListAPIView):
+    serializer_class = AnswerSerializer
+    permission_classes = [IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['answer']
     
@@ -74,7 +88,7 @@ class UserAnswerViewSet(generics.ListCreateAPIView):
 
 class UserAcceptedAnswerViewSet(generics.ListCreateAPIView):
     serializer_class = AnswerSerializer
-    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    permission_classes = [IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['answer']
     
@@ -88,7 +102,7 @@ class UserAcceptedAnswerViewSet(generics.ListCreateAPIView):
 
 class UserAcceptedFavoritedAnswerViewSet(generics.ListCreateAPIView):
     serializer_class = AnswerSerializer
-    permission_classes = [IsAuthenticated, IsUserOrReadOnly]
+    permission_classes = [IsUserOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['answer']
     
@@ -101,8 +115,9 @@ class UserAcceptedFavoritedAnswerViewSet(generics.ListCreateAPIView):
 
 
 class QuestionAnswerDetail(generics.RetrieveUpdateDestroyAPIView):
-	queryset = Question.objects.all().order_by("id")
-	serializer_class = QuestionAnswerSerializer
+    queryset = Question.objects.all().order_by("id")
+    serializer_class = QuestionAnswerSerializer
+    permission_classes = [IsUserOrReadOnly]
 
 
 class UserViewSet(ModelViewSet):
@@ -111,19 +126,22 @@ class UserViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class AnswerViewSet(ModelViewSet):
+class AnswerViewSet(ListAPIView):
     queryset = Answer.objects.all().order_by("favorited")
     serializer_class = AnswerSerializer
+    permission_classes = [IsUserOrReadOnly]
 
 
 class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
-	queryset = Answer.objects.all()
-	serializer_class = AnswerSerializer
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSerializer
+    permission_classes = [IsUserOrReadOnly]
 
 
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [IsUserOrReadOnly]
 
     def get_queryset(self):
         filters = Q(user_id=self.request.user)
