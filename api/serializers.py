@@ -10,14 +10,16 @@ class UserSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
-    
+    # favorited = serializers.SlugRelatedField(slug_field='username', read_only=True, many=True)
+
     class Meta:
         model = Question
         fields = ('id', 'user', 'question', 'favorited', 'created_at',)
 
 class AnswerSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
-    
+    # favorited = serializers.SlugRelatedField(slug_field='username', read_only=True, many=True)
+
     class Meta:
         model = Answer
         fields = ('id', 'user', 'answer', 'questions', 'accepted', 'favorited', 'answered_at',)
@@ -25,6 +27,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True, required=False, source='questions')
     user = serializers.ReadOnlyField(source='user.username')
+
     class Meta:
         model = Question
         fields = ('id', 'user', 'question', 'answers')

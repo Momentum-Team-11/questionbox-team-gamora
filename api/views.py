@@ -135,7 +135,7 @@ class AnswerViewSet(ListAPIView):
 class AnswerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
-    permission_classes = [IsUserOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
 
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):

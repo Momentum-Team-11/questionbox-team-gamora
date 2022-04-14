@@ -400,27 +400,20 @@ GET api/question/<int:pk>/answers
 ```
 
 {
-	"id": 3,
-	"user": "paul",
-	"question": "whats your favorite color?",
+	"id": 2,
+	"user": "admin",
+	"question": "Who is Gamora?",
 	"answers": [
 		{
-			"id": 3,
+			"id": 21,
 			"user": "paul",
-			"answer": "Green",
-			"questions": 3,
-			"favorited": [],
-			"answered_at": "2022-04-06T22:12:01.827699Z"
-		},
-		{
-			"id": 7,
-			"user": "paul",
-			"answer": "green/blue",
-			"questions": 3,
+			"answer": "She is the daughter of Thanos.",
+			"questions": 2,
+			"accepted": 1,
 			"favorited": [
-				2
+				1
 			],
-			"answered_at": "2022-04-07T16:44:14.945693Z"
+			"answered_at": "2022-04-14T13:27:49.184754Z"
 		}
 	]
 }
@@ -438,7 +431,7 @@ Requires authentication.
 POST api/user_q_list
 
 {
-   "question": "What is your bird name?",
+   "question": "What is your birds name?",
    "favorited": []
 }
 ```
@@ -451,7 +444,7 @@ POST api/user_q_list
 {
 	"id": 7,
 	"user": "admin",
-	"question": "What is your bird name?",
+	"question": "What is your birds name?",
 	"favorited": [],
 	"created_at": "2022-04-08T19:17:00.463150Z"
 }
@@ -538,7 +531,7 @@ Requires authentication.
 POST api/user_accepted_a_list
 
 {
-   "answer": "Sunny",
+   "answer": "jingles",
    "questoins": 1, 
    "accepted": 1, 
    "favorited": []
@@ -683,12 +676,14 @@ When updating you only want to give them the option of updating the favorited fi
 Requires authentication. 
 
 ### request
+`questions` are required fields.
 
 ```
 
 PATCH api/<int:pk>/answer_detail
 
 {
+  "questions": [2]
   "favorited": []
 }
 ```

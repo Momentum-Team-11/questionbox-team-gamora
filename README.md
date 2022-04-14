@@ -1,93 +1,133 @@
 # Questionbox
 
-This application is a question and answer platform, similar to Stack Overflow. It does _not_ have to be themed to code-related questions, though. Theming and design is up to you.
+Have you ever heard no questoin is a dumb question? Questionbox is a safe space for you to be able to ask anything you're curious about. Users are able to ask any question they can think of and have other users give their expeiences or thoughts to your question. A user has the ability to accept an answer from all the answers given. Within these accepted answers a user has the ability to pick their favorite answer. 
 
-You will likely not be able to do ALL of the listed requirements. That is OK. Decide what the core functionality is and what you can wait to implement once you have the basics done.
+See another question by another user? Go ahead, answer it! See if that user accepts it or even favorites it. Your insight could be what they were looking for. 
 
-### Back-end: The API
+Forgot what questions you asked? Go back and look at all the questions you asked and see what your favorite answer was in your profile. Users will be able to see a list of all questions asked as well as the ones they favorited. Along with a list of questions asked the associated answers will be available to be viewed. 
 
-Backend devs will build an API using Django and Django REST Framework that allows users to create questions and answers to questions. Question-askers can mark an answer as accepted. Logged-in users can "star" or favorite a question or answer. Your application only needs to serve JSON, not HTML.
+Do you have many questions or answers to comb through and you would like to do a quick lookup? Use the built in search feature to find what you're looking for. 
 
-You will need to make a list of your endpoints available to the front-end devs on your team.
+You get the gist! Now go out and ask some questions.
+------ 
 
-#### Requirements
+### REST Api
+A quick overview of how REST Api's work. press cmd k+v to open preview README
 
-- Allow an authenticated user to create a question (allowing for long-form text).
-- Allow an authenticated user to create an answer to a question (one question can have many answers).
-- Allow unauthenticated users to view all questions and answers.
-- Have registration and token-based authentication.
-- Allow a user to get a list of all the questions they have posted.
-- Allow a user to get a list of all the answers they have posted.
-- Allow the original author of the question to mark an answer as accepted.
-- Questions cannot be edited once they have been asked (_note_: allowing editing of unanswered questions is listed as an extra challenge).
-- A question can be deleted by its author, whether answered or unanswered. If it is deleted, all associated answers should also be deleted.
-- Users can search the database by supplying a search term. This should use [Django's PostgreSQL full-text search](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/).
-  - At minimum allow a search in the text of a question.
-  - A more comprehensive search would allow searching both questions and answers.
-- Authenticated users can "star" or favorite questions or answers they like. They should also be able to un-star anything that they have starred.
-- Deploy to Heroku.
+![alt text](https://www.sqlshack.com/wp-content/uploads/2021/03/representational-state-transfer-diagram_gray-e1615546557211.png "Rest Api diagram")
 
-### 🌶️ Spicy features
+The client machine is your PC from where you can request data from a database server and all the communication is done over the REST APIs. There are a few methods in this which are as follows.
 
-- Add tags to questions and allow search by tags
-- Allow a user to upload a profile photo.
-  - for Heroku, you'll need to configure a storage backend like Amazon S3 in order to upload files.
-- Allow an unanswered question to be edited.
-- Allow the author of an answer to delete or edit an answer.
+⋅⋅⋅ GET – Used by the client to select or retrieve data from the server
 
-### Back-end development notes
+⋅⋅⋅ POST – Used by the client to send or write data to the server
 
-You should use [djoser](https://djoser.readthedocs.io/en/latest/) and [token-based authentication](https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication) to handle registration and login.
+⋅⋅⋅ PUT/PATCH – Used by the client to update existing data on the server
 
-### CORS
+⋅⋅⋅ DELETE – Used by the client to delete existing data on the server
 
-CORS (Cross-Origin Resource Sharing) headers must be added to your responses for the front-end app to interact with your API. [Read this blog post to find out how to set up CORS](https://www.techiediaries.com/django-cors/). You will want to use django-cors-headers (the second option mentioned in the blog post) and set `CORS_ALLOW_ALL_ORIGINS = True`.
+Our machine is communicating with a production database called Heroku. Your base production URL is https://dj-questionbox.herokuapp.com/ and you put this in your Insomnia.
 
-## Front-End: The React application
+The way we are going to test our endpoints is through Insomnia. This application allows us to send those methods above to our production database. 
 
-The front-end team will build a React application that will send AJAX requests to the QuestionBox API.
+Now that we got that out of the way let us test some endpoints. Lets start by how a user will ask a question. 
+## Create a new question
 
-This application is a question and answer platform, similar to Stack Overflow in format, but you can theme it and design it however you like. This application should allow logged-in users to ask questions, give and receive answers, and mark an answer as accepted. Users that are not logged in should still be able to view questions and answers, but cannot ask questions, give answers, or mark answers as accepted.
+Requires authentication by registering and logging in.
 
-### Requirements
+### request
 
-- Users can create an account.
-- Users can log in.
-- Authenticated users can ask a question.
-  - A question cannot be edited.
-  - A user can delete their own question.
-- Authenticated users can answer a question.
-- Authenticated users can choose an accepted answer among the answers to one of their questions.
-- Authenticated users have a profile page that lists all their questions and answers.
-- Authenticated users can "star" a question or answer they like.
-  - Allow a user to "unstar" something they have previously starred.
-- You will have to route some URLs.
-  - Login and registration should each have a URL, or one for both if they are in the same view.
-  - Questions should have their own route.
-  - User profiles should have their own route.
-  - If implementing pagination, you will likely use routes to implement this.
-- Deploy to Netlify
+`question` are required fields.
 
-### 🌶️ Spicy features
+```
+POST api/user_q_list
+(you will put <api/user_q_list> at the end of your base production URL)
+{
+   "question": "What is your birds name?",
+}
+```
 
-Most of these are dependent on whether the API supports these capabilities.
+### response
 
-- Allow users to search the API using a search term.
-  - If your API supports tags, allow search by tags.
-- The list of questions that comes back from the API may be paginated. If so, you should implement pagination in your application.
-- Allow questions to be edited if they have not been answered.
-- Allow users to show only the questions and/or answers they have starred.
-- Allow users to follow/unfollow each other.
-- Allow users to upload a profile photo.
+```
+201 Created
 
-### Front-end Development notes
+{
+	"id": 7,
+	"user": "admin",
+	"question": "What is your birds name?",
+	"favorited": [],
+	"created_at": "2022-04-08T19:17:00.463150Z"
+}
 
-During development, you will want to be able to make requests before the API is complete. You can handle this in a few ways.
+```
 
-One way is to make functions or methods for all your API calls, but instead of having them actually make the calls at first, have them set the data you are expecting without actually making an API call. Another way is to use the provided exported mock API specification for Mockoon, a tool that will run a mock server for you. In this case, you will want to be able to switch which server you use based on the environment your code is running in.
+After we have made a question we should have other users answering our question. Lets take a look how to view all those answers from that question using the `GET` method. 
+## List one question and all answers to it
 
-You can [read more about approaches to building your front-end before the API is done in this dev.to article](https://dev.to/momentum/how-to-build-a-front-end-app-before-you-have-an-api-3ai3).
+Requires authentication.
 
-If you need to switch how you access your data based on environment, read [this article on create-react-app-environments](https://medium.com/@tacomanator/environments-with-create-react-app-7b645312c09d).
+### request
 
-You can work with a back-end dev to get the back-end API running on your local machine, but you do not have to.
+Requires authentication.
+
+```
+GET api/question/<int:pk>/answers
+
+```
+
+### respons
+```
+
+{
+	"id": 2,
+	"user": "admin",
+	"question": "Who is Gamora?",
+	"answers": [
+		{
+			"id": 21,
+			"user": "paul",
+			"answer": "She is the daughter of Thanos.",
+			"questions": 2,
+			"accepted": 1,
+			"favorited": [
+				1
+			],
+			"answered_at": "2022-04-14T13:27:49.184754Z"
+		}
+	]
+}
+```
+
+Notice how favorited has a 1 in the M2M field. That answer was favorited by that user. To update or `PATCH` existing data so that the favorited field is gone try this.
+## Update a question
+
+Requires authentication. 
+
+### request
+
+```
+
+PATCH api/<int:pk>/answer_detail
+
+{
+  "favorited": []
+}
+```
+
+### response
+
+```
+200 OK
+
+{
+	"id": 21,
+	"user": "paul",
+	"answer": "She is the daughter of Thanos.",
+	"questions": 2,
+	"accepted": 1,
+	"favorited": [],
+	"answered_at": "2022-04-14T13:27:49.184754Z"
+}
+```
+
